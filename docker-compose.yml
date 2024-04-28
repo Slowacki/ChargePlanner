@@ -1,0 +1,6 @@
+﻿services:
+  chargeplanner.api:
+    image: chargeplanner.api
+    build:
+      context: .
+      dockerfile: src/ChargePlanner.Api/Dockerfile
