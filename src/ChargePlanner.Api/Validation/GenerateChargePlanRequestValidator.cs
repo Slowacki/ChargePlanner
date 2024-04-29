@@ -21,6 +21,8 @@ public class GenerateChargePlanRequestValidator : AbstractValidator<GenerateChar
         RuleFor(x => x.ChargeSettings.EndTime).GreaterThan(DateTime.Now);
         RuleFor(x => x.ChargeSettings.EndTime).GreaterThan(x => x.ChargeSettings.StartTime);
         RuleFor(x => x.ChargeSettings.Tariffs).NotEmpty();
+        RuleFor(x => x.ChargeSettings.Tariffs.First().StartTime).Equal(new TimeOnly(0, 0));
+        RuleFor(x => x.ChargeSettings.Tariffs.Last().EndTime).Equal(new TimeOnly(23, 59, 59));
         RuleForEach(x => x.ChargeSettings.Tariffs).SetValidator(new TariffValidator());
     }
 }

@@ -16,11 +16,11 @@ public class Generate(IChargePlanGenerator chargePlanGenerator, IValidator<Gener
     /// <summary>
     /// Generates and returns a charge plan for the given battery and charging settings
     /// </summary>
-    /// <param name="request"></param>
+    /// <param name="request">The request containing charge and battery parameters</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Charge plan specifying in which hours should the battery be charged and the related tariff price</returns>
     [HttpPost]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ChargePlanResponse), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> Execute([FromBody] GenerateChargePlanRequest request, CancellationToken cancellationToken)
     {
@@ -29,6 +29,16 @@ public class Generate(IChargePlanGenerator chargePlanGenerator, IValidator<Gener
         if(!validationResult.IsValid)
         {
             return BadRequest(validationResult);
+        }
+
+        Tariff? previousTariff = null;
+        foreach (var tariff in request.ChargeSettings.Tariffs)
+        {
+            if (previousTariff is not null && (previousTariff.EndTime > tariff.StartTime ||
+                                               tariff.StartTime - previousTariff.EndTime > TimeSpan.FromSeconds(1)))
+                return BadRequest("Invalid Tariffs");
+
+            previousTariff = tariff;
         }
         
         var chargePlan =

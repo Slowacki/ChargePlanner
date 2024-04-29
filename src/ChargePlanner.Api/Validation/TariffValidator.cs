@@ -8,6 +8,5 @@ public class TariffValidator : AbstractValidator<Tariff>
     public TariffValidator()
     {
         RuleFor(x => x.PricePerKwh).GreaterThan(0);
-
     }
 }
