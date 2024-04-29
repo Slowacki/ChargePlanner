@@ -4,6 +4,10 @@
 The solution allows to generate a plan how a car battery should be charged, taking into account the desired
 charge levels, but also the energy prices during specific times of the day.
 
+It dividies the time we have to charge the battery into periods by the available tariffs. Subsequently it applies
+charge time to those periods based on the business requirements. The result is mapped for the comfort of the API user
+and to comply with the response requirements.
+
 ## Prerequisites
 - .NET 8
 - WSL 2 for Windows (https://learn.microsoft.com/en-us/windows/wsl/install)
