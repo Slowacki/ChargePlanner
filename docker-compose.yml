@@ -3,6 +3,6 @@
     image: chargeplanner.api
     build:
       context: .
-      dockerfile: src/ChargePlanner.Api/Dockerfile
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
