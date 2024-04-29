@@ -25,27 +25,39 @@ public class ChargePlanGenerator : IChargePlanGenerator
 
         var i = 0;
         
-        while (timeToDirectCharge.TotalSeconds > 0)
+        while (timeToDirectCharge.TotalMinutes > 0)
         {
             var remainingPeriodLength = chargePeriods[i].IdleLength;
 
-            chargePeriods[i].ChargeLength = timeToDirectCharge > remainingPeriodLength ? remainingPeriodLength : timeToDirectCharge;
+            var chargeLength = timeToDirectCharge > remainingPeriodLength ? remainingPeriodLength : timeToDirectCharge;
+
+            chargePeriods[i].ChargeLength += chargeLength;
             
-            timeToDesiredCharge -= remainingPeriodLength;
-            timeToDirectCharge -= remainingPeriodLength;
+            timeToDesiredCharge -= chargeLength;
+            timeToDirectCharge -= chargeLength;
             i++;
         }
 
         var costOrderedPeriods = chargePeriods.OrderBy(c => c.ChargingPricePerKwh).ToList();
         var j = 0;
 
-        while (timeToDesiredCharge.TotalSeconds > 0)
+        while (timeToDesiredCharge.TotalMinutes > 0)
         {
             var remainingPeriodLength = costOrderedPeriods[j].IdleLength;
 
-            costOrderedPeriods[j].ChargeLength = timeToDesiredCharge > remainingPeriodLength ? remainingPeriodLength : timeToDesiredCharge;
+            if (remainingPeriodLength.TotalMinutes == 0)
+            {
+                j++;
+                continue;
+            }
+
+            var additionalChargeTime = timeToDesiredCharge > remainingPeriodLength
+                ? remainingPeriodLength
+                : timeToDesiredCharge;
             
-            timeToDesiredCharge -= costOrderedPeriods[j].ChargeLength;
+            costOrderedPeriods[j].ChargeLength += additionalChargeTime;
+            
+            timeToDesiredCharge -= additionalChargeTime;
             j++;
         }
         
@@ -74,7 +86,7 @@ public class ChargePlanGenerator : IChargePlanGenerator
             
             chargePeriods.Add(chargePeriod);
 
-            var periodLength = Math.Round(chargePeriod.Length.TotalMinutes, MidpointRounding.ToZero) + 1;
+            var periodLength = Math.Round(chargePeriod.Length.TotalMinutes, MidpointRounding.ToEven);
 
             remainingChargingTime -= periodLength;
 

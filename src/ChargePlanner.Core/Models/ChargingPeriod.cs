@@ -6,6 +6,6 @@ public class ChargingPeriod(DateTime startTime, DateTime endTime, decimal chargi
     public DateTime EndTime { get; set; } = endTime;
     public Decimal ChargingPricePerKwh { get; set; } = chargingPricePerKwh;
     public TimeSpan ChargeLength { get; set; } = TimeSpan.Zero;
-    public TimeSpan Length => EndTime - StartTime;
-    public TimeSpan IdleLength => EndTime - StartTime - ChargeLength;
+    public TimeSpan Length => TimeSpan.FromMinutes(Math.Round((EndTime - StartTime).TotalMinutes));
+    public TimeSpan IdleLength => TimeSpan.FromMinutes(Math.Round((EndTime - StartTime - ChargeLength).TotalMinutes));
 }
