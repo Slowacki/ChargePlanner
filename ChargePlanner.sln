@@ -13,6 +13,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{27C1A90B-8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChargePlanner.Core", "src\ChargePlanner.Core\ChargePlanner.Core.csproj", "{89ACA7FD-0F91-4640-B033-D10DBFCE16A6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "component", "component", "{2C1E735A-7CF4-4155-8323-CCF69DD2B401}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChargePlanner.Api.Tests", "ChargePlanner.Api.Tests\ChargePlanner.Api.Tests.csproj", "{68EDF41C-438E-489B-B06A-88916D186467}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,9 +31,15 @@ Global
 		{89ACA7FD-0F91-4640-B033-D10DBFCE16A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89ACA7FD-0F91-4640-B033-D10DBFCE16A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89ACA7FD-0F91-4640-B033-D10DBFCE16A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68EDF41C-438E-489B-B06A-88916D186467}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68EDF41C-438E-489B-B06A-88916D186467}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68EDF41C-438E-489B-B06A-88916D186467}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68EDF41C-438E-489B-B06A-88916D186467}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8664DFDD-6189-457C-BCA1-82623735FD3F} = {95CD98E3-1368-4075-AC20-A2E45314A344}
 		{89ACA7FD-0F91-4640-B033-D10DBFCE16A6} = {95CD98E3-1368-4075-AC20-A2E45314A344}
+		{2C1E735A-7CF4-4155-8323-CCF69DD2B401} = {27C1A90B-8199-4B4F-8926-786003F9D230}
+		{68EDF41C-438E-489B-B06A-88916D186467} = {2C1E735A-7CF4-4155-8323-CCF69DD2B401}
 	EndGlobalSection
 EndGlobal

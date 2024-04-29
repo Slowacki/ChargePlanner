@@ -4,3 +4,5 @@
     build:
       context: .
       dockerfile: src/ChargePlanner.Api/Dockerfile
+    ports:
+      - "8080:8080"
