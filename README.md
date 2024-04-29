@@ -17,7 +17,7 @@ and to comply with the response requirements.
 - Clone the repository from github
 - Make sure port 8080 is available
 - Run `docker compose up` in the main solution folder
-- Navigate to `http://localhost:8080//swagger/index.html`
+- Navigate to `http://localhost:8080/swagger/index.html`
 
 ## Notes
 - Way more tests could be added. The ones present are meant to just demonstrate how the test coverage could look like.
@@ -25,6 +25,7 @@ and to comply with the response requirements.
   I don't feel like it's a good approach however. It adds a lot of unnecessary complication for the users' of the API. Don't want to spend too
   much time on the project, but if I were to, I'd rewrite the endpoint to only accept tariff start times, the tariff periods should be calculated
   in the backend then.
+- Swagger is enabled for non-development environments on purpose to make testing the solution easier after running the solution with Docker
 
 ## Sample JSON to test out the API
 ```
