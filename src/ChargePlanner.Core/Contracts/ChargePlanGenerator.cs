@@ -11,67 +11,35 @@ public class ChargePlanGenerator : IChargePlanGenerator
         var chargingStartTime = chargeSettings.StartTime;
         var chargingEndTime = chargeSettings.EndTime;
         var timeForCharging = chargingEndTime - chargingStartTime;
-        var timeToDesiredCharge = batterySettings.GetRemainingChargeTime(chargeSettings.DesiredChargePercentage);
         var timeToDirectCharge = batterySettings.GetRemainingChargeTime(chargeSettings.DirectChargePercentage);
+        var remainingTimeToDesiredCharge = batterySettings.GetRemainingChargeTime(chargeSettings.DesiredChargePercentage) - timeToDirectCharge;
 
         var chargePeriods = GenerateChargingPeriods(chargingStartTime, chargingEndTime, chargeSettings.Tariffs);
 
-        if (timeToDesiredCharge > timeForCharging || timeToDirectCharge > timeForCharging)
+        if (timeToDirectCharge > timeForCharging || remainingTimeToDesiredCharge > timeForCharging)
         {
             chargePeriods.ForEach(c => c.ChargeLength = c.Length);
 
             return new ChargePlan(chargePeriods);
         }
 
-        var i = 0;
+        chargePeriods = ApplyChargingTime(timeToDirectCharge, chargePeriods);
+
+        chargePeriods = chargePeriods.OrderBy(c => c.ChargePricePerKwh).ToList();
         
-        while (timeToDirectCharge.TotalMinutes > 0)
-        {
-            var remainingPeriodLength = chargePeriods[i].IdleLength;
-
-            var chargeLength = timeToDirectCharge > remainingPeriodLength ? remainingPeriodLength : timeToDirectCharge;
-
-            chargePeriods[i].ChargeLength += chargeLength;
-            
-            timeToDesiredCharge -= chargeLength;
-            timeToDirectCharge -= chargeLength;
-            i++;
-        }
-
-        var costOrderedPeriods = chargePeriods.OrderBy(c => c.ChargingPricePerKwh).ToList();
-        var j = 0;
-
-        while (timeToDesiredCharge.TotalMinutes > 0)
-        {
-            var remainingPeriodLength = costOrderedPeriods[j].IdleLength;
-
-            if (remainingPeriodLength.TotalMinutes == 0)
-            {
-                j++;
-                continue;
-            }
-
-            var additionalChargeTime = timeToDesiredCharge > remainingPeriodLength
-                ? remainingPeriodLength
-                : timeToDesiredCharge;
-            
-            costOrderedPeriods[j].ChargeLength += additionalChargeTime;
-            
-            timeToDesiredCharge -= additionalChargeTime;
-            j++;
-        }
+        chargePeriods = ApplyChargingTime(remainingTimeToDesiredCharge, chargePeriods);
         
-        return new ChargePlan(costOrderedPeriods.OrderBy(c => c.StartTime));
+        return new ChargePlan(chargePeriods.OrderBy(c => c.StartTime));
     }
 
-    private List<ChargingPeriod> GenerateChargingPeriods(
+    private List<ChargePeriod> GenerateChargingPeriods(
         DateTime startTime, 
         DateTime endTime, 
         IEnumerable<Tariff> tariffs)
     {
         tariffs = tariffs.ToList();
         var remainingChargingTime = (endTime - startTime).TotalMinutes;
-        var chargePeriods = new List<ChargingPeriod>();
+        var chargePeriods = new List<ChargePeriod>();
 
         while (remainingChargingTime > 0)
         {
@@ -80,7 +48,7 @@ public class ChargePlanGenerator : IChargePlanGenerator
 
             var tariffEndTime = new DateTime(DateOnly.FromDateTime(startTime), currentTariff.EndTime, startTime.Kind);
             
-            var chargePeriod = new ChargingPeriod(startTime,
+            var chargePeriod = new ChargePeriod(startTime,
                 endTime < tariffEndTime ? endTime : tariffEndTime,
                 currentTariff.PricePerKwh);
             
@@ -94,5 +62,24 @@ public class ChargePlanGenerator : IChargePlanGenerator
         }
 
         return chargePeriods;
+    }
+
+    private List<ChargePeriod> ApplyChargingTime(TimeSpan chargingTime, List<ChargePeriod> orderedChargePeriods)
+    {
+        var i = 0;
+        
+        while (chargingTime.TotalMinutes > 0)
+        {
+            var remainingPeriodLength = orderedChargePeriods[i].IdleLength;
+
+            var chargeLength = chargingTime > remainingPeriodLength ? remainingPeriodLength : chargingTime;
+
+            orderedChargePeriods[i].ChargeLength += chargeLength;
+            
+            chargingTime -= chargeLength;
+            i++;
+        }
+
+        return orderedChargePeriods;
     }
 }

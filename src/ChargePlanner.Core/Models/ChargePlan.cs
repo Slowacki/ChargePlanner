@@ -1,3 +1,3 @@
 ﻿namespace ChargePlanner.Core.Models;
 
-public record ChargePlan(IEnumerable<ChargingPeriod> ChargePeriods);
+public record ChargePlan(IEnumerable<ChargePeriod> ChargePeriods);

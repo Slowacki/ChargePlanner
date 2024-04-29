@@ -48,25 +48,25 @@ public class Generate(IChargePlanGenerator chargePlanGenerator, IValidator<Gener
                 chargePeriods.Add(new(chargePeriod.StartTime, 
                     chargePeriod.EndTime, 
                     false, 
-                    chargePeriod.ChargingPricePerKwh));
+                    chargePeriod.ChargePricePerKwh));
             }
             else if (chargePeriod.IdleLength.TotalMinutes == 0)
             {
                 chargePeriods.Add(new(chargePeriod.StartTime, 
                     chargePeriod.EndTime, 
                     true, 
-                    chargePeriod.ChargingPricePerKwh));
+                    chargePeriod.ChargePricePerKwh));
             }
             else
             {
                 chargePeriods.Add(new(chargePeriod.StartTime, 
                     chargePeriod.StartTime.AddMinutes(chargePeriod.ChargeLength.TotalMinutes), 
                     true, 
-                    chargePeriod.ChargingPricePerKwh));
+                    chargePeriod.ChargePricePerKwh));
                 chargePeriods.Add(new(chargePeriod.StartTime.AddMinutes(chargePeriod.ChargeLength.TotalMinutes), 
                     chargePeriod.EndTime, 
                     false, 
-                    chargePeriod.ChargingPricePerKwh));
+                    chargePeriod.ChargePricePerKwh));
             }
         }
 
