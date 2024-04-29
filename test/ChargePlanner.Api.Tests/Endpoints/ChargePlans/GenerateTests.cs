@@ -6,27 +6,22 @@ using ChargePlanner.Core.Models;
 
 namespace ChargePlanner.Api.Tests.Endpoints.ChargePlans;
 
-// Example tests
+// Example component tests
 [Collection(ComponentTestsCollection.Name)]
-public class CreateTests : IDisposable
+public class CreateTests(WebAppFactory webAppFactory) : IDisposable
 {
-    private readonly HttpClient _httpClient;
+    private readonly HttpClient _httpClient = webAppFactory.CreateClient();
     private readonly Fixture _fixture = new();
 
-    public CreateTests(WebAppFactory webAppFactory)
-    {
-        _httpClient = webAppFactory.CreateClient();
-    }
-    
     [Fact(DisplayName = "Execute returns a plan that immediately starts charging if direct charge below current level")]
     public async Task Execute_ReturnsDirectCharging_WhenDirectChargeBelowCurrentLevel()
     {
         var directChargingPeriodPrice = 3;
-        var tarrifs = new List<Tariff>()
+        var tariffs = new List<Tariff>
         {
-            new Tariff(new TimeOnly(0, 0), new TimeOnly(7, 30), 1),
-            new Tariff(new TimeOnly(7, 30), new TimeOnly(18, 30), directChargingPeriodPrice),
-            new Tariff(new TimeOnly(18, 30), new TimeOnly(23, 59, 59), 2)
+            new (new TimeOnly(0, 0), new TimeOnly(7, 30), 1),
+            new (new TimeOnly(7, 30), new TimeOnly(18, 30), directChargingPeriodPrice),
+            new (new TimeOnly(18, 30), new TimeOnly(23, 59, 59), 2)
         };
         
         var batterySettings = new BatterySettings(10, 100, 0);
@@ -34,7 +29,7 @@ public class CreateTests : IDisposable
             new DateTime(2345, 06, 01, 18, 0, 0), 
             new DateTime(2345, 06, 02, 2, 0, 0), 
             10,
-            tarrifs);
+            tariffs);
 
         var request = new GenerateChargePlanRequest(batterySettings, chargeSettings);
 
@@ -61,7 +56,7 @@ public class CreateTests : IDisposable
     [Fact(DisplayName = "Execute returns bad request when charge power is zero")]
     public async Task Execute_ReturnsBadRequest_WhenChargePowerIsZero()
     {
-        var tarrifs = new List<Tariff>()
+        var tariffs = new List<Tariff>()
         {
             new Tariff(new TimeOnly(0, 0), new TimeOnly(7, 30), 1),
             new Tariff(new TimeOnly(7, 30), new TimeOnly(18, 30), 2),
@@ -70,7 +65,7 @@ public class CreateTests : IDisposable
         
         var batterySettings = new BatterySettings(0, 100, 10);
         var chargeSettings = new ChargeSettings(50, DateTime.Now.AddHours(5), DateTime.Now.AddHours(15), 10,
-            tarrifs);
+            tariffs);
 
         var request = new GenerateChargePlanRequest(batterySettings, chargeSettings);
 
