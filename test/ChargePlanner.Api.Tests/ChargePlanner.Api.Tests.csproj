@@ -31,7 +31,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\ChargePlanner.Api\ChargePlanner.Api.csproj" />
+      <ProjectReference Include="..\..\src\ChargePlanner.Api\ChargePlanner.Api.csproj" />
     </ItemGroup>
 
 </Project>

@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChargePlanner.Core", "src\C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "component", "component", "{2C1E735A-7CF4-4155-8323-CCF69DD2B401}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChargePlanner.Api.Tests", "ChargePlanner.Api.Tests\ChargePlanner.Api.Tests.csproj", "{68EDF41C-438E-489B-B06A-88916D186467}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChargePlanner.Api.Tests", "test\ChargePlanner.Api.Tests\ChargePlanner.Api.Tests.csproj", "{68EDF41C-438E-489B-B06A-88916D186467}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

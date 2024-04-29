@@ -21,12 +21,12 @@ public class CreateTests : IDisposable
     [Fact(DisplayName = "Execute returns a plan that immediately starts charging if direct charge below current level")]
     public async Task Execute_ReturnsDirectCharging_WhenDirectChargeBelowCurrentLevel()
     {
-        var directChargingPeriodPrice = 2;
+        var directChargingPeriodPrice = 3;
         var tarrifs = new List<Tariff>()
         {
             new Tariff(new TimeOnly(0, 0), new TimeOnly(7, 30), 1),
-            new Tariff(new TimeOnly(7, 30), new TimeOnly(18, 30), 3),
-            new Tariff(new TimeOnly(18, 30), new TimeOnly(23, 59, 59), directChargingPeriodPrice)
+            new Tariff(new TimeOnly(7, 30), new TimeOnly(18, 30), directChargingPeriodPrice),
+            new Tariff(new TimeOnly(18, 30), new TimeOnly(23, 59, 59), 2)
         };
         
         var batterySettings = new BatterySettings(10, 100, 0);
