@@ -1,5 +1,8 @@
 using Asp.Versioning;
+using ChargePlanner.Api.Endpoints.ChargePlans;
+using ChargePlanner.Api.Validation;
 using ChargePlanner.Core.Contracts;
+using FluentValidation;
 
 namespace ChargePlanner.Api;
 
@@ -11,13 +14,15 @@ public class Program
         var services = builder.Services;
         
         // Add services to the container.
-        services.AddScoped<IChargePlanGenerator, Core.Contracts.ChargePlanGenerator>();
+        services.AddScoped<IChargePlanGenerator, ChargePlanGenerator>();
+        services.AddScoped<IValidator<GenerateChargePlanRequest>, GenerateChargePlanRequestValidator>();
         
-        builder.Services.AddControllers();
+        services.AddControllers();
+        
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddDateOnlyTimeOnlyStringConverters();
-        builder.Services.AddSwaggerGen(c => c.UseDateOnlyTimeOnlyStringConverters());
+        services.AddEndpointsApiExplorer();
+        services.AddDateOnlyTimeOnlyStringConverters();
+        services.AddSwaggerGen(c => c.UseDateOnlyTimeOnlyStringConverters());
 
         services.AddApiVersioning(options =>
         {
